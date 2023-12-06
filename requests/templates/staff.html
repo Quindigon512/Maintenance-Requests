@@ -1,0 +1,113 @@
+<h1>All Maintenance Requests</h1>
+
+<style>
+    .float-buttons{
+        display: flex;
+        gap: 10px;
+    }
+    .float-img {
+        float: left;
+        margin-right: 10px;
+        margin-bottom: 5px;
+        border: solid black 1px
+    }
+    .float-delete{
+        float: right
+    }
+</style>
+
+<div class = "float-buttons">
+    <form method = "get" action = "{% url 'mainRequest:sortNum' %}">
+        <input type = "submit" value = "Sort by Appartment Number">
+    </form>
+</div>
+
+<form method="post" action="{% url 'mainRequest:sortPending' %}">
+    {% csrf_token %}
+    <button type="submit">Show Pending Requests</button>
+</form>
+
+<form method="post" action="{% url 'mainRequest:sortCompleted' %}">
+    {% csrf_token %}
+    <button type="submit">Show Completed Requests</button>
+</form>
+
+<form method="post" action="{% url 'mainRequest:filterByArea' %}">
+    {% csrf_token %}
+
+    <label for="areaFilter">Sort by Area:</label>
+    <select name="areaFilter" id="areaFilter">
+        <option value="Bathroom">Bathroom</option>
+        <option value="Kitchen">Kitchen</option>
+        <option value="Living Room">Living Room</option>
+        <option value="Bedroom">Bedroom</option>
+    </select>
+    <button type="submit">Apply</button>
+</form>
+
+{% for item in pendingRequests %}
+    <div>
+        Apartment Number: {{ item.aptNum }}<br/>
+        Area: {{ item.area }}<br/>
+        Description: {{ item.descr }}<br/>
+        Date and Time: {{ item.dateAndTime }}<br/>
+        Status: {{ item.status}}<br/><br/>
+        <img src = "{{ item.image.url }}" width = 150 class = "float-img"> <br/>
+        <form method="POST" action="{% url 'mainRequest:update_status' item.id %}">
+            {% csrf_token %}
+            <button type="submit" class="float-buttons"> Update Status </button>
+        </form><br/><br/><br/>
+        <hr>
+    </div>
+{% endfor %}
+
+{% for item in completedRequests %}
+    <div>
+        Apartment Number: {{ item.aptNum }}<br/>
+        Area: {{ item.area }}<br/>
+        Description: {{ item.descr }}<br/>
+        Date and Time: {{ item.dateAndTime }}<br/>
+        Status: {{ item.status}}<br/><br/>
+        <img src = "{{ item.image.url }}" width = 150 class = "float-img"> <br/>
+        <form method="POST" action="{% url 'mainRequest:update_status' item.id %}">
+            {% csrf_token %}
+            <button type="submit" class="float-buttons"> Update Status </button>
+        </form><br/><br/><br/>
+        <hr>
+    </div>
+{% endfor %}
+
+{% for item in areaRequests %}
+    <div>
+        Apartment Number: {{ item.aptNum }}<br/>
+        Area: {{ item.area }}<br/>
+        Description: {{ item.descr }}<br/>
+        Date and Time: {{ item.dateAndTime }}<br/>
+        Status: {{ item.status}}<br/><br/>
+        <img src = "{{ item.image.url }}" width = 150 class = "float-img"> <br/>
+        <form method="POST" action="{% url 'mainRequest:update_status' item.id %}">
+            {% csrf_token %}
+            <button type="submit" class="float-buttons"> Update Status </button>
+        </form><br/><br/><br/>
+        <hr>
+    </div>
+{% endfor %}
+
+<form method="post" action="{% url 'mainRequest:filterByDate' %}">
+    {% csrf_token %}
+    <button type="submit">Sort by Oldest to Newest Date</button>
+</form>
+
+{% for item in all %}
+    Apartment Number: {{ item.aptNum }}<br/>
+    Area: {{ item.area }}<br/>
+    Description: {{ item.descr }}<br/>
+    Date and Time: {{ item.dateAndTime }}<br/>
+    Status: {{ item.status}}<br/><br/>
+    <img src = "{{ item.image.url }}" width = 150 class = "float-img"> <br/>
+    <form method="POST" action="{% url 'mainRequest:update_status' item.id %}">
+        {% csrf_token %}
+        <button type="submit" class="float-buttons"> Update Status </button>
+    </form><br/><br/><br/>
+    <hr>
+{% endfor %}
